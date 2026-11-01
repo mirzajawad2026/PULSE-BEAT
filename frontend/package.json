@@ -1,0 +1,90 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "PulseBeat music streaming application",
+  "author": "PulseBeat",
+  "private": true,
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.5",
+    "concurrently": "^9.2.1",
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3",
+    "vite": "^8.2.1",
+    "wait-on": "^8.0.3",
+    "eslint": "^9.33.0",
+    "@eslint/js": "^9.33.0",
+    "globals": "^16.3.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20"
+  },
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "electron electron/main.cjs",
+    "electron:dev": "concurrently -k \"npm run dev\" \"wait-on http://localhost:5173 && npm run electron\"",
+    "desktop": "concurrently -k \"npm run dev\" \"node ../Backend/server.js\" \"wait-on http://localhost:5173 http://localhost:3000 && npm run electron\"",
+    "desktop:build": "npm run build && electron-builder --win",
+    "electron:build": "npm run desktop:build",
+    "package-win": "npm run desktop:build",
+    "lint": "eslint ."
+  },
+  "build": {
+    "appId": "com.pulsebeat.app",
+    "productName": "PulseBeat",
+    "copyright": "Copyright \u00a9 2026 PulseBeat",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../Backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!node_modules/.cache/**",
+          "!node_modules/*/.cache/**"
+        ]
+      }
+    ],
+    "asar": true,
+    "npmRebuild": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/win/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PulseBeat"
+    }
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.18.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  },
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=10.0.0"
+  }
+}
